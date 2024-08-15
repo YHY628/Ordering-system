@@ -1,33 +1,36 @@
 package com.yhy.service.impl;
 
 
-import com.yhy.dto.OrderRequestDto;
+import com.yhy.entity.dto.OrderRequestDto;
 import com.yhy.mapper.MenuitemMapper;
 import com.yhy.mapper.OrderItemsMapper;
 import com.yhy.mapper.OrderMapper;
-import com.yhy.model.MenuItem;
-import com.yhy.model.OrderItems;
-import com.yhy.model.Orders;
+import com.yhy.entity.po.MenuItem;
+import com.yhy.entity.po.OrderItems;
+import com.yhy.entity.po.Orders;
 import com.yhy.service.OrderService;
-import com.yhy.utils.MyBatisSqlSessionFactory;
 
-import org.apache.ibatis.session.SqlSession;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import javax.annotation.Resource;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
 
-
+@Service
 public class OrderServiceImpl implements OrderService {
-    private final SqlSession sqlSession= MyBatisSqlSessionFactory.getSqlSession();
-
-    private final MenuitemMapper menuitemMapper = sqlSession.getMapper(MenuitemMapper.class);
-    private final OrderMapper orderMapper = sqlSession.getMapper(OrderMapper.class);
-    private final OrderItemsMapper orderItemsMapper = sqlSession.getMapper(OrderItemsMapper.class);
+    @Resource
+    private MenuitemMapper menuitemMapper ;
+    @Resource
+    private OrderMapper orderMapper ;
+    @Resource
+    private OrderItemsMapper orderItemsMapper ;
 
     @Override
+    @Transactional
     public void addOrder(OrderRequestDto orderRequest) throws Exception {
 
         Orders order = new Orders();
@@ -66,6 +69,5 @@ public class OrderServiceImpl implements OrderService {
         order.setOrderstatus("等待商家接单");
 
         orderMapper.insertOrder(order);
-        MyBatisSqlSessionFactory.commitSqlSession();
     }
 }

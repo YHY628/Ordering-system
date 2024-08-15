@@ -1,10 +1,7 @@
-package com.yhy.model;
+package com.yhy.entity.po;
 
 
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 
 import java.math.BigDecimal;
 import java.sql.Timestamp;
@@ -12,6 +9,7 @@ import java.sql.Timestamp;
 @Getter
 @NoArgsConstructor
 @ToString
+@Data
 public class MenuItem {
     private String id;
     private String restaurant;

@@ -1,4 +1,4 @@
-package com.yhy.model;
+package com.yhy.entity.po;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

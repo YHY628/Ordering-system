@@ -1,4 +1,4 @@
-package com.yhy.dto;
+package com.yhy.entity.dto;
 
 import lombok.Getter;
 import lombok.Setter;

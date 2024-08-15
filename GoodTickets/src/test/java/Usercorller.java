@@ -1,6 +1,5 @@
 import com.yhy.mapper.UserMapper;
-import com.yhy.model.User;
-import com.yhy.utils.MyBatisSqlSessionFactory;
+import com.yhy.entity.po.User;
 import org.apache.ibatis.session.SqlSession;
 import org.junit.Test;
 

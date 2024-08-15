@@ -1,19 +1,17 @@
 package com.yhy.service.impl;
 
 import com.yhy.mapper.MenuitemMapper;
-import com.yhy.model.MenuItem;
+import com.yhy.entity.po.MenuItem;
 import com.yhy.service.MenuitemService;
-import com.yhy.utils.MyBatisSqlSessionFactory;
-
-import org.apache.ibatis.session.SqlSession;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-
+@Service
 public class MenuitemServiceImpl implements MenuitemService {
-    private SqlSession sqlSession= MyBatisSqlSessionFactory.getSqlSession();
-
-    private MenuitemMapper menuitemMapper = sqlSession.getMapper(MenuitemMapper.class);
+    @Autowired
+    private MenuitemMapper menuitemMapper ;
 
     @Override
     public List<MenuItem> getMenuitems(String id) throws Exception {

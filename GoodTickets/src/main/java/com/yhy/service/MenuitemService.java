@@ -1,6 +1,6 @@
 package com.yhy.service;
 
-import com.yhy.model.MenuItem;
+import com.yhy.entity.po.MenuItem;
 
 import java.util.List;
 

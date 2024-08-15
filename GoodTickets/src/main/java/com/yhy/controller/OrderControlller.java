@@ -1,17 +1,18 @@
 package com.yhy.controller;
 
-import com.yhy.dto.OrderRequestDto;
+import com.yhy.entity.dto.OrderRequestDto;
 import com.yhy.resp.R;
 import com.yhy.service.impl.OrderServiceImpl;
-import lombok.Setter;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
-
+@RestController
+@RequestMapping("d/order/")
 public class OrderControlller {
-    @Setter
+    @Autowired
     private OrderServiceImpl orderService ;
-
+    @RequestMapping("summit")
     public R<?> addOrder(OrderRequestDto orderRequestDto) throws Exception {
         orderService.addOrder(orderRequestDto);
         return R.SUCCESS("下单成功","OK");
