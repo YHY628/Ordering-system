@@ -4,7 +4,6 @@ import com.yhy.controller.MenuitemController;
 import com.yhy.controller.OrderControlller;
 import com.yhy.controller.RestaurantsController;
 import com.yhy.controller.UserController;
-import com.yhy.dao.impl.*;
 import com.yhy.dto.OrderRequestDto;
 import com.yhy.exception.InfoException;
 import com.yhy.exception.LoginException;
@@ -16,10 +15,8 @@ import com.yhy.service.impl.MenuitemServiceImpl;
 import com.yhy.service.impl.OrderServiceImpl;
 import com.yhy.service.impl.RestaurantsServiceImpl;
 import com.yhy.service.impl.UserServiceImpl;
-import com.yhy.utils.DatabasePoolUtil;
 import com.yhy.utils.JsonWriter;
-import com.yhy.utils.PropsUtil;
-import com.yhy.utils.ThreadLocalConnections;
+import com.yhy.utils.MyBatisSqlSessionFactory;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.http.HttpServlet;
@@ -31,7 +28,6 @@ import java.math.BigDecimal;
 import java.util.*;
 
 public class DispatcherServlet extends HttpServlet {
-    private final static String CONFIG_LOCATION = "databaseConfigLocation";
 
     private Map<String, HttpHandler> handlerMap;
 
@@ -40,44 +36,25 @@ public class DispatcherServlet extends HttpServlet {
     private MenuitemController menuitemController;
     private OrderControlller orderController;
 
-
-
     @Override
     public void init(ServletConfig config) {
-        // 数据库初始化
-        String configLocation = config.getInitParameter(CONFIG_LOCATION); // 获取文件路径
-        Properties properties = PropsUtil.readConfig(configLocation); // 读取文件内容
-        DatabasePoolUtil.init(properties); // 初始化数据库
 
         // 初始化 controller  service  dao 组件
         userController = new UserController();
         UserServiceImpl userService = new UserServiceImpl();
-        UserDaoImpl userDao = new UserDaoImpl();
         userController.setUserService(userService);
-        userService.setUserDao(userDao);
 
         restaurantsController=new RestaurantsController();
-        RestaurantsDaoDaoImpl restaurantsDao = new RestaurantsDaoDaoImpl();
         RestaurantsServiceImpl restaurantsService = new RestaurantsServiceImpl();
         restaurantsController.setRestaurantsService(restaurantsService);
-        restaurantsService.setRestaurantsDao(restaurantsDao);
 
         menuitemController=new MenuitemController();
-        MenuitemDaoImpl menuitemDao = new MenuitemDaoImpl();
         MenuitemServiceImpl menuitemService = new MenuitemServiceImpl();
         menuitemController.setMenuitemService(menuitemService);
-        menuitemService.setDao(menuitemDao);
 
         orderController=new OrderControlller();
-        OrderDaoImpl orderDao = new OrderDaoImpl();
         OrderServiceImpl orderService = new OrderServiceImpl();
-        MenuitemDaoImpl menuitemDao2 = new MenuitemDaoImpl();
-        OrderItemsDaoImpl orderItemsDao = new OrderItemsDaoImpl();
         orderController.setOrderService(orderService);
-        orderService.setOrderDao(orderDao);
-        orderService.setMenuItemDao(menuitemDao2);
-        orderService.setOrderItemsDao(orderItemsDao);
-
 
 
         // 初始化 handlerMap
@@ -101,7 +78,6 @@ public class DispatcherServlet extends HttpServlet {
         String path = uri.substring(1); // 去掉前导斜杠
         HttpHandler handler = handlerMap.get(path);
         try {
-            ThreadLocalConnections.set();
             r=handler.handle(req, resp); // 调用对应的处理函数
             JsonWriter.writer(r, resp); // 响应客户端
 
@@ -110,14 +86,12 @@ public class DispatcherServlet extends HttpServlet {
         } catch (InfoException e) {
             JsonWriter.writer(R.INFO_ERROR(e.getMessage()), resp);
         } catch (Exception e) {
-            if (!ThreadLocalConnections.isAutoCommit()) {
-                ThreadLocalConnections.rollback();
-            }
+            MyBatisSqlSessionFactory.rollbackSqlSession();
             JsonWriter.writer(R.FAIL(e.getMessage()), resp); // 响应异常
             e.printStackTrace();
         } finally {
             // 关闭数据库
-            ThreadLocalConnections.close();
+            MyBatisSqlSessionFactory.closeSqlSession();
         }
 
     }
@@ -165,7 +139,7 @@ public class DispatcherServlet extends HttpServlet {
     private R<String>handeraddmenit(HttpServletRequest req, HttpServletResponse resp) throws Exception {
         String name = req.getParameter("name");
         String description = req.getParameter("description");
-        Double price = Double.valueOf(req.getParameter("price"));
+        Double price = Double.parseDouble(req.getParameter("price"));
         String image = req.getParameter("image");
         MenuItem menuItem=new MenuItem();
         menuItem.setName(name);

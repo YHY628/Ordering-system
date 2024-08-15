@@ -1,26 +1,28 @@
 package com.yhy.service.impl;
 
-import com.yhy.dao.impl.MenuitemDaoImpl;
+import com.yhy.mapper.MenuitemMapper;
 import com.yhy.model.MenuItem;
 import com.yhy.service.MenuitemService;
-import lombok.Setter;
+import com.yhy.utils.MyBatisSqlSessionFactory;
+
+import org.apache.ibatis.session.SqlSession;
 
 import java.util.List;
 
-@Setter
-public class MenuitemServiceImpl implements MenuitemService {
-    private MenuitemDaoImpl dao;
 
+public class MenuitemServiceImpl implements MenuitemService {
+    private SqlSession sqlSession= MyBatisSqlSessionFactory.getSqlSession();
+
+    private MenuitemMapper menuitemMapper = sqlSession.getMapper(MenuitemMapper.class);
 
     @Override
     public List<MenuItem> getMenuitems(String id) throws Exception {
 
-        System.out.println("55555");
-        return dao.selectMenuitem(id);
+        return menuitemMapper.selectMenuitem(id);
     }
 
     @Override
     public void addMenuitems(MenuItem menuItem) throws Exception {
-        dao.insertMenuitem(menuItem);
+        menuitemMapper.insertMenuitem(menuItem);
     }
 }

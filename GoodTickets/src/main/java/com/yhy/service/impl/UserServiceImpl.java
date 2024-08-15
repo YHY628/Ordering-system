@@ -1,25 +1,24 @@
 package com.yhy.service.impl;
 
-import com.yhy.dao.UserDao;
-import com.yhy.dao.impl.UserDaoImpl;
+import com.yhy.mapper.UserMapper;
 import com.yhy.model.User;
 import com.yhy.service.UserService;
 import com.yhy.utils.LockUtil;
+import com.yhy.utils.MyBatisSqlSessionFactory;
+import org.apache.ibatis.session.SqlSession;
 
 
 public class UserServiceImpl implements UserService {
 
-    private UserDao userDao = new UserDaoImpl();
+    private SqlSession sqlSession= MyBatisSqlSessionFactory.getSqlSession();
+
+    private UserMapper userMapper = sqlSession.getMapper(UserMapper.class);
 
     private final String lockPrefix = "com.yhy.service.UserServiceImpl";
 
-    public void setUserDao(UserDao userDao) {
-        this.userDao = userDao;
-    }
-
     @Override
     public User findUserByphone(String phone) throws Exception {
-        return userDao.selectbyphone(phone);
+        return userMapper.selectbyphone(phone);
     }
 
     @Override
@@ -31,12 +30,12 @@ public class UserServiceImpl implements UserService {
         if (!LockUtil.lock(lock)) { // 原子性
             throw new Exception("手机号已经注册");
         }
-        User data = userDao.selectbyphone(user.getPhone());
+        User data=userMapper.selectbyphone(user.getPhone());
         if (data!=null) {
             throw new Exception("手机号已经注册");
         }
         // 注册账号
-        userDao.insertUser(user);
+        userMapper.insertUser(user);
         LockUtil.unlock(lock);
     }
 }
