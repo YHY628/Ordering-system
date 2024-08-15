@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>注册账号</title>
+    <link rel="stylesheet" href="/static/bootstrap/bootstrap-3.4.1-dist/css/bootstrap.css">
+</head>
+<body>
+<h1>注册账号</h1>
+<div class="stu-reg-box" style="width: 500px;margin: 100px auto 0 auto;">
+    <div class="phone-box" style="padding-bottom: 18px">
+        <input type="text" class="form-control" placeholder="请输入手机号" name="phone">
+    </div>
+    <div class="pwd-box" style="padding-bottom: 18px">
+        <input type="text" class="form-control" placeholder="请输入密码" name="password">
+    </div>
+    <div class="btn-box">
+        <input type="button" class="btn btn-block btn-info" value="注册" onclick="userReg()">
+    </div>
+</div>
+
+<script src="/static/js/jQuery-2.1.1.js"></script>
+<script src="/static/bootstrap/bootstrap-3.4.1-dist/js/bootstrap.js"></script>
+<script src="/static/js/route.js"></script>
+<script>
+
+  function userReg() {
+    let phone = document.querySelector(".stu-reg-box .phone-box input[name='phone']").value;
+    let password = document.querySelector(".stu-reg-box .pwd-box input[name='password']").value;
+
+    // 验证
+    // console.log(phone, pwd, scId, scName);
+
+    $.ajax({
+      url: "/d/user/reguser",
+      method: "post",
+      data: { phone, password},
+      dataType: "json",
+      success(r) {
+        const {code, message, data, success} = r;
+        if (success) {
+          route("/v/user/login");
+        }
+      }
+    })
+  }
+</script>
+</body>
+</html>

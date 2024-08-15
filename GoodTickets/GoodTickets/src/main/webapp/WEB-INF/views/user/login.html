@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" href="/static/bootstrap/bootstrap-3.4.1-dist/css/bootstrap.css">
+
+</head>
+<body>
+<h1>login</h1>
+<div class="stu-login-box" style="width: 500px;margin: 100px auto 0 auto;">
+    <div class="phone-box" style="padding-bottom: 18px">
+        <input type="text" class="form-control" placeholder="请输入手机号" name="phone">
+    </div>
+    <div class="pwd-box" style="padding-bottom: 18px">
+        <input type="text" class="form-control" placeholder="请输入密码" name="password">
+    </div>
+    <div class="btn-box">
+        <input type="button" class="btn btn-block btn-info" value="登录" onclick="login()">
+    </div>
+    <div class="login-message" style="color: red;"></div>
+    <div className="login-footer">
+        <p>还没有账号?<a href="/v/user/reg">立即注册</a></p>
+    </div>
+</div>
+
+<script src="/static/js/jQuery-2.1.1.js"></script>
+<script src="/static/bootstrap/bootstrap-3.4.1-dist/js/bootstrap.js"></script>
+<script src="/static/js/cookie.js"></script>
+<script src="/static/js/route.js"></script>
+<script !src="">
+    function login() {
+        let phone = document.querySelector(".stu-login-box .phone-box input[name='phone']").value;
+        let password = document.querySelector(".stu-login-box .pwd-box input[name='password']").value;
+        $.ajax({
+            url: "/d/user/login",
+            method: "post",
+            data: {phone, password},
+            dataType: "json",
+            success(r) {
+                const {code, message, data, success} = r;
+                if (success) {
+                    // 写入 cookie
+                    cookie("username", data);
+                    route("/v/user/home");
+                    return;
+                }
+                if (code === 5000) {
+                    document.querySelector(".login-message").innerHTML = message;
+                    return;
+                }
+
+            }
+        })
+    }
+</script>
+</body>
+</html>
