@@ -7,13 +7,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.util.List;
 @RestController
 @RequestMapping("d/restaurant/")
 public class RestaurantsController {
-    @Autowired
+    @Resource
     private RestaurantsServiceImpl restaurantsService = new RestaurantsServiceImpl();
 
     @RequestMapping("get")
@@ -23,7 +24,7 @@ public class RestaurantsController {
     }
     @RequestMapping("reg")
     public R<String>addRestaurant(Restaurant restaurant) throws Exception{
-        restaurantsService.addRestaurant(restaurant);
+        //restaurantsService.addRestaurant(restaurant);
         return R.SUCCESS("添加成功","OK");
     }
     @RequestMapping("manageRestaurant")

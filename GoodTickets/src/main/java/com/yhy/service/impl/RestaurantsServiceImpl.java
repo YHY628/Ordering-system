@@ -67,13 +67,13 @@ public class RestaurantsServiceImpl implements RestaurantsService {
         //4实现缓冲重建
         //4.1获取互斥锁
         String lockKey="lock:shop:"+id;
-        boolean isLock=tryLock(lockKey);
+//boolean isLock=tryLock(lockKey);
         //4.2判断是否获取成功
-        if(！isLock){
+        //if(！isLock){
             //4.3失败，则休眠并递归重试
 
 
-        }
+      //  }
         //4.4成功，根据id查询数据库
         Restaurant restaurant=restaurantsMapper.selectRestaurantById(id);
         if(restaurant==null){

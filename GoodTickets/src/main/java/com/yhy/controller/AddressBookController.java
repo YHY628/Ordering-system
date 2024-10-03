@@ -15,7 +15,7 @@ private AddressBookService addressService;
 
 
 
-    @PostMapping("/address")
+   /* @PostMapping("/address")
     public ResponseEntity<AddressBook> addAddress(@RequestBody AddressBook addressBook) {
         AddressBook newAddress = addressService.addAddress(addressBook);
         return ResponseEntity.ok(newAddress);
@@ -48,5 +48,5 @@ private AddressBookService addressService;
     }
 
 
-
+*/
 }
